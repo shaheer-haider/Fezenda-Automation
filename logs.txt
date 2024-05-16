@@ -169,3 +169,28 @@ Stacktrace:
 	(No symbol) [0x00007FF611D218C4]
 	BaseThreadInitThunk [0x00007FFC5F087AC4+20]
 	RtlUserThreadStart [0x00007FFC5FA9A4E1+33]
+Message: no such element: Unable to locate element: {"method":"link text","selector":"IC/A/OAC/002001732/2023"}
+  (Session info: chrome=124.0.6367.208); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x00007FF611DB1522+60802]
+	(No symbol) [0x00007FF611D2AC22]
+	(No symbol) [0x00007FF611BE7CE4]
+	(No symbol) [0x00007FF611C36D4D]
+	(No symbol) [0x00007FF611C36E1C]
+	(No symbol) [0x00007FF611C7CE37]
+	(No symbol) [0x00007FF611C5ABBF]
+	(No symbol) [0x00007FF611C7A224]
+	(No symbol) [0x00007FF611C5A923]
+	(No symbol) [0x00007FF611C28FEC]
+	(No symbol) [0x00007FF611C29C21]
+	GetHandleVerifier [0x00007FF6120B41BD+3217949]
+	GetHandleVerifier [0x00007FF6120F6157+3488183]
+	GetHandleVerifier [0x00007FF6120EF0DF+3459391]
+	GetHandleVerifier [0x00007FF611E6B8E6+823622]
+	(No symbol) [0x00007FF611D35FBF]
+	(No symbol) [0x00007FF611D30EE4]
+	(No symbol) [0x00007FF611D31072]
+	(No symbol) [0x00007FF611D218C4]
+	BaseThreadInitThunk [0x00007FFC5F087AC4+20]
+	RtlUserThreadStart [0x00007FFC5FA9A4E1+33]
+HTTPConnectionPool(host='localhost', port=53799): Max retries exceeded with url: /session/125c84c71cd9d11e28170d0b6de4c150/window/handles (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001C21B837080>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))HTTPConnectionPool(host='localhost', port=53864): Max retries exceeded with url: /session/fc087024a3a4163ead704d31d7896e29/window/handles (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001F798747230>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))

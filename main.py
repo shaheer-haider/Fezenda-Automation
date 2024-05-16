@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import os
 from threading import Thread
 from time import sleep
 import pyautogui
@@ -115,10 +116,15 @@ def process_loja(driver, loja_cnpj, last_run):
 
             parsed_data["Type"] = entry_type
             
-            parsed_data["FilePath"] = pdf_storage_path + "+".join([
+            current_pdf_storage_path = pdf_storage_path + f"\\Loja-{loja_cnpj['CNPJ']}"
+            if not os.path.exists(current_pdf_storage_path):
+                os.mkdir(current_pdf_storage_path)
+
+            parsed_data["FilePath"] = current_pdf_storage_path + "+".join([
                 f"\\Loja+{loja_cnpj['CNPJ']}",
                 f"{str(parsed_data['DataEnvio']).replace('/', '-').replace(' ', '_').replace(':', '-')}",
-                f"{parsed_data['Type']}.pdf"
+                f"{parsed_data['Type']}",
+                f"{str(parsed_data['Aviso']).replace('/', '-')}.pdf",
             ])
             
             html_content = driver.page_source
