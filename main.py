@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from threading import Thread
 from time import sleep
@@ -18,7 +19,7 @@ from constants import *
         
 pyautogui.FAILSAFE = False
 
-def process_loja(driver, loja_cnpj):
+def process_loja(driver, loja_cnpj, last_run):
 
     driver = safe_driver_get(driver, "https://www.dec.fazenda.sp.gov.br/DEC/UCServicosDisponiveis/ExibeServicosDisponiveis.aspx")
 
@@ -72,7 +73,16 @@ def process_loja(driver, loja_cnpj):
 
             if parsed_data["Assunto"] != text_to_find_on_last_run_null:
                 continue
-            
+
+            print(data)
+            # 30/04/2024 23:00:39'
+            datdatetime_object = datetime.strptime(parsed_data["DataEnvio"], "%d/%m/%Y %H:%M:%S")
+
+            if last_run:
+                if datdatetime_object <= last_run:
+                    print("This one is already done")
+                    return driver, filtered_data
+
             filtered_data.append(data)
             
             try:
@@ -137,17 +147,16 @@ def process_loja(driver, loja_cnpj):
     return driver, filtered_data
 
 
-def run_bot():
+def run_bot(source_file, last_run=None):
     print("Run bot")
     try:
-
-        open("status.txt", "w").write("running")
         driver = webdriver.Chrome()
         driver.get("https://www.dec.fazenda.sp.gov.br/DEC/UCLogin/login.aspx")
         status = driver.execute_script("return window.performance.getEntries()[0].responseStatus")
 
         if str(status)[0] != "2":
-            exit()
+            print("Site is down")
+            raise SystemExit
 
         # click certificate button(image)
         Thread(target=click_panel_in_other_thread, args=[driver]).start()
@@ -164,11 +173,9 @@ def run_bot():
             Thread(target=click_panel_in_other_thread, args=[driver]).start()
             sleep(1)
             pyautogui.press("enter")
-            # Switch back to the main page
-            driver.switch_to.default_content()
 
 
-        dec_loja_cnpj = pd.read_excel(source_excel_file_path).to_dict(orient="records")
+        dec_loja_cnpj = pd.read_excel(source_file).to_dict(orient="records")
 
         all_data = []
         
@@ -177,22 +184,26 @@ def run_bot():
         for index, loja_cnpj in list(zip(range(0, len(all_cnpjs)), dec_loja_cnpj)):
 
             storeFile = open("store.json", "r")
-            storeData = json.loads(storeFile.read())
+            storeData = json.loads(storeFile.read())    
 
-            if(index > all_cnpjs.index(storeData["last_cnpj"])):
-                driver, processed_loja = process_loja(driver, loja_cnpj)
-                all_data += processed_loja
+            # if storeData["last_cnpj"] in all_cnpjs:
+            #     if(index > all_cnpjs.index(storeData["last_cnpj"])):
+            #         driver, processed_loja = process_loja(driver, loja_cnpj, last_run)
+            #         all_data += processed_loja
+            # else:
+            driver, processed_loja = process_loja(driver, loja_cnpj, last_run)
+            all_data += processed_loja
 
-                storeData["last_cnpj"] = loja_cnpj["CNPJ"]
-                
-                storeFile = open("store.json", "w")
-                storeFile.write(json.dumps(storeData))
+
+            storeData["last_cnpj"] = loja_cnpj["CNPJ"]
+            storeFile = open("store.json", "w")
+            storeFile.write(json.dumps(storeData))
 
     except NoSuchElementException as e:
-        open("status.txt", "w").write("stopped")
+        open("logs.txt", "a").write(e.__str__())
+
     except Exception as e:
-        open("status.txt", "w").write("stopped due to unknown error. check logs")
-        # open("logs.txt", "a").write(e.__str__())
+        open("logs.txt", "a").write(e.__str__())
         raise e        
      
 

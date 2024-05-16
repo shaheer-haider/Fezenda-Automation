@@ -19,11 +19,12 @@ def save_as_pdf(file_path, output_path):
 
 
 
-def safe_driver_get(driver, url):
-    driver.get("https://www.dec.fazenda.sp.gov.br/DEC/UCServicosDisponiveis/ExibeServicosDisponiveis.aspx")
+def safe_driver_get(driver, url="https://www.dec.fazenda.sp.gov.br/DEC/UCServicosDisponiveis/ExibeServicosDisponiveis.aspx"):
+    driver.get(url)
     status = driver.execute_script("return window.performance.getEntries()[0].responseStatus")
     if str(status)[0] != "2":
-        return exit()
+        print("Site is down")
+        raise SystemExit
     return driver
 
 

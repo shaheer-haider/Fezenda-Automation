@@ -5,4 +5,3 @@ total_items_para_id = "ConteudoPagina_tabContainerCaixaPostal_tabAtivas_ucItensA
 
 
 pdf_storage_path = r"C:\Bot_dec\Loja-CNPJ"
-source_excel_file_path = r"C:\Bot_dec\dec_loja_cnpj.xlsx"
