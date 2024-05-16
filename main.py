@@ -156,7 +156,7 @@ def run_bot(source_file, last_run=None):
 
         if str(status)[0] != "2":
             print("Site is down")
-            raise SystemExit
+            return False
 
         # click certificate button(image)
         Thread(target=click_panel_in_other_thread, args=[driver]).start()
@@ -201,11 +201,10 @@ def run_bot(source_file, last_run=None):
 
     except NoSuchElementException as e:
         open("logs.txt", "a").write(e.__str__())
-
+        return False
     except Exception as e:
         open("logs.txt", "a").write(e.__str__())
-        raise e        
-     
+        return False       
 
-if __name__ == "__main__":
-    run_bot()
+    print("Bot has completed its task")
+    return True     

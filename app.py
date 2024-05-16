@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+from time import sleep
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import filedialog, messagebox
@@ -7,19 +8,14 @@ from threading import Thread
 from main import run_bot
 from tkcalendar import DateEntry
 
-
-def main():
-    status = open("status.txt", "r").read().strip().replace("\n", "")
-    if status == "running":
-        return "Bot is already running"
-
-    elif status != "stopped":
-        return "Bot is failed due to unknown error, check logs"
-
-    Thread(target=run_bot).start()
-
-    return "Bot started successfully"
-
+  
+def run_bot_thread(source_file, last_run):
+    while True:
+        is_bot_completed = run_bot(source_file, last_run)
+        if(is_bot_completed):
+            break
+        else:
+            sleep(60*5)
 
 class MyApp(tk.Tk):
     def __init__(self):
@@ -71,7 +67,7 @@ class MyApp(tk.Tk):
     def run_function(self):
         if self.bot_thread:
             if self.bot_thread.is_alive():
-                messagebox.showerror("Error", "Bot is already running.")
+                messagebox.showerror("Error", "Bot's Thread is already running.")
                 return
                 
         
@@ -101,7 +97,7 @@ class MyApp(tk.Tk):
                 print("Last Run:", self.entry_last_run.get_date())
         
             print("Source CNPJ File Path:", source_file)
-            self.bot_thread = Thread(target=run_bot, args=[source_file, last_run])
+            self.bot_thread = Thread(target=run_bot_thread, args=[source_file, last_run])
             self.bot_thread.start()
             
             storeData["last_run"] = datetime.now().strftime("%m/%d/%Y")
@@ -110,7 +106,7 @@ class MyApp(tk.Tk):
             # run_bot(source_file, last_run)
         else:
             messagebox.showwarning("Warning", "Please select a source CNPJ file.")
-            
+          
 
 if __name__ == "__main__":
     app = MyApp()
