@@ -71,7 +71,7 @@ def process_loja(driver, loja_cnpj, last_run):
                 "Type": "",
                 "Assunto": data["Assunto"]
             }
-
+            # if last_run == datetime(2000, 1, 1):
             if parsed_data["Assunto"] != text_to_find_on_last_run_null:
                 continue
 
@@ -112,7 +112,8 @@ def process_loja(driver, loja_cnpj, last_run):
             try:
                 entry_type = complemento_sentense.split("- Arquivo ")[1]
             except:
-                continue
+                entry_type = "OUTROS"
+    
 
             parsed_data["Type"] = entry_type
             
