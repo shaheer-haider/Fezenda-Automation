@@ -189,9 +189,13 @@ def run_bot(source_file, last_run=None):
         all_cnpjs = list(map(lambda x: x["CNPJ"], dec_loja_cnpj))
 
         for index, loja_cnpj in list(zip(range(0, len(all_cnpjs)), dec_loja_cnpj)):
-
-            storeFile = open("store.json", "r")
-            storeData = json.loads(storeFile.read())    
+            try:
+                storeFile = open("store.json", "r")
+                storeData = json.loads(storeFile.read())    
+            except json.JSONDecodeError:
+                storeData = {
+                    "last_cnpj": None, "last_run": None
+                }
 
             # if storeData["last_cnpj"] in all_cnpjs:
             #     if(index > all_cnpjs.index(storeData["last_cnpj"])):
